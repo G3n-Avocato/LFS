@@ -1,0 +1,167 @@
+Filesystem Hierarchy Standard
+
+/bin
+commande qui peuvent a la fois etre utiliser par admin
+et par user. Mais necessaires lorsque aucun system de fichier
+n'est montee. Contient aussi des cmds utilisees involontairement des scripts.
+
+aucun sous repertoire dans /bin.
+les cmds 3.4 sont obligatoires 
+/boot
+tout ce qui est necessaire au proscessus de demarrage
+a l'exception des fichiers de configurations non necessaires
+au demarrage et a l'installateur de cartes.
+stock data utilisees avant que le noyaux commence a executer
+les programmes en mode utilisateur.
+
+/dev
+emplacement des fichiers speciaux ou des fichiers de peripheriques
+contenir cmd MAKEDEV qui cree des peripheriques selon les besoins
+MAKEDEV.local pour peripheriques locaux.
+/dev/null -> condition EOF
+/dev/zero -> source de donnees mise a zero
+/dev/tty -> terminal de ctrl d'un proscessus 
+
+/etc
+fichiers de configuration -> c'est un fichier local utilise pour
+controler le fonctionnement d'un programme.
+Doit etre static et ne peut etre un binaire executable.
+Recommandee de stocker fichiers dans sous-repertoire.
+3.7 opter obligatoire.
+etc/opt -> fichier de configuration pour /opt.
+les fichiers de configurations specifiques a l'hote pour les
+packages de logiciels d'appl complementaires doivent etre 
+installees dans le repertoire /etc/opt/<subdir>>
+COnfiguration particuliere pour windows.
+
+/home (facultatif)
+repertoire personnels des users.
+
+/lib
+bibliotheque partagees essentielles et modules du noyaux.
+repertoire contenant les images de la bibliotheques partagee
+necessaires pour demarrer le systeme et executer les cmds dans
+le systeme de fichiers racine, par les binaires /bin et /sbin.
+
+/lib<qual>(facultatif)
+bibliotheque partagees essentielles (format alternatif)
+prennent en charge plusieurs formats binaires.
+
+/media
+point de montage pour les supports amovibles.
+contient des sous-repertoires utilises comme pts de montage
+pour les supports amovibles tels que les disquettes cd-rom et diques zip.
+
+/mnt
+pts de montage pour un system de fichier montee temporairement
+par un admin system selon besoins. ne doit pas etre utilisee 
+pour les programmes d'installation.
+
+/opt
+reservee a l'installation de packages de logiciels d'appl complementaire.
+/opt<package> /opt/<provider> directory tree.
+<package> -> static package objects (software package).
+<provider> -> LANANA registered provider name. le nom du fournisseur LSB attribuee par <LANANA>
+(<LANANA> = L'autorite chargee de l'attribution des noms et numeros LINUX)
+/bin, /doc, /include, /info, /lib, /man sont reserves a l'admin
+dans le repertoire otp. 
+
+/root
+repertoire personnel user root
+
+/run
+ce repertoire continet des donnees d'information system decrivant le system 
+depuis sont demarrage. les fichiers de se repertoire doivent etre efface au debut 
+du proscessus de demarrage.
+ne peut pas etre accessible en ecriture aux users non privilegies.
+
+/sbin 
+binaire system.
+les utilitaires utilisees pour l'administration du systeme sont stockes
+dans /sbin. Il contient les binaires essentiels au demarrage, a la recuperation 
+et le reparation du system. En plus des binaire de /bin.
+Aucun sous-repertoire dans /sbin.
+cmd -> shutdown (cmd pour system down)
+
+/srv 
+donnees specifiques au site qui sont fournies par ce systeme.
+
+/tmp 
+fichiers temporaires doit etre rendu disponible pour les programmes 
+necessitent des fichiers temporaires. Les progrs ne doivent pas suposer
+que les fichiers ou rep sont conserves entre les appels du program.
+
+/proc 
+system de fichier virtuel contennat des infos sur le noyaux et les proscessus
+
+/sys
+
+/usr 
+donnes partageables en lecture seule.
+hierarchie :
+/usr/bin -> les cmds user 
+aucun sous repertoire. 
+/usr/include -> repertoire pour fichiers d'include standard
+pour langage programmation C.
+/usr/lib -> lib 
+inclu fichier object et bibliotheques
+/usr/libexec (faculattif) -> binaires exec par d'autre program.
+/usr/local -> hierarchie locale 
+use by admin system pour installation locale de logiciels.
+/usr/sbin -> binaire system non vitaux
+aucun sous repertoire dans /usr/sbin.
+/usr/share -> donnees independantes de l'architecture.
+tout program ou package qui contient ou requiert des donnees qui 
+n'ont pas besoin d'etre modifiees doit stocker ces donnees dans 
+/usr/share avec un sous repertoire.
+/usr/share/man -> manuels en ligne.
+/usr/share/misc -> donnees diverses independantes de l'architecture
+-> ascii
+/usr/src -> code source uniquement a des fins de reference
+
+/var
+contient fichiers de donnees variables. inclut spool. donnees admin et 
+journalistaion (log), fichiers transitoire et temporaires.
+/var/cache -> donnees du cache d'application.
+les donnees doivent rester valides entre les appels de l'app et le redemarrage du system.
+l'app doit etre capable de recuperer apres la suppression manuelle de ces fichiers.
+
+/var/lib -> information sur l'etat variables
+/var/lib/misc -> donnees diverse sur l'etat
+/var/local -> donnees variables pour /usr/local
+/var/lock -> verouiller les fichiers 
+fichiers de verouillage pour peripheriques.
+/var/log -> fichiers journaux et repertoires
+/var/log/lastlog, /messages, /wtmp
+/var/opt -> donnees variable pour /opt
+/var/run -> donnees pertinentes pour les proscessus en cours d'execution.
+lien symbolique vers /run
+/var/spool -> donnees de la bobine d'appl,
+donnees qui attendent un traitement ulterieur. suppr apres avoir ete traitee.
+/var/spool/cron -> tache cron et at 
+/var/tmp -> fichier temporaires conserves entre les redemarrages du systeme
+
+
+autotools: 
+Automake outil permettant de generer automatiquement des Makefiles
+GNU Build System 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
