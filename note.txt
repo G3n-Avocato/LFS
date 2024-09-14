@@ -141,12 +141,22 @@ donnees qui attendent un traitement ulterieur. suppr apres avoir ete traitee.
 /var/spool/cron -> tache cron et at 
 /var/tmp -> fichier temporaires conserves entre les redemarrages du systeme
 
-
+https://www.gnu.org/software/automake/manual/html_node/index.html#SEC_Contents
 autotools: 
 Automake outil permettant de generer automatiquement des Makefiles
 GNU Build System 
+prefix = /usr/local 
+DESTDIR=$HOME -> l'installation sera redirigee
 
+https://www.linuxfromscratch.org/lfs/view/stable/index.html
 
+système LFS -> LINUX FROM SCRATCH
+
+guide pratique de creation de logiciel => https://tldp.org/HOWTO/Software-Building-HOWTO.html
+
+guide pratique de creation de logiciel a partir du code source => https://moi.vonos.net/linux/beginners-installing-from-source/
+
+partition pour LFS => https://www.linuxfromscratch.org/hints/downloads/files/partitioning-for-lfs.txt
 
 
 
