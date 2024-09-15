@@ -159,19 +159,142 @@ guide pratique de creation de logiciel a partir du code source => https://moi.vo
 partition pour LFS => https://www.linuxfromscratch.org/hints/downloads/files/partitioning-for-lfs.txt
 
 
+Recommandation :
+| MATERIEL |
+* processeur du system => 4 coeurs + system au moins 8 Go de memoire
+
+| LOGICIEL |
+(en-tete logiciels dans paquets separes sous forme de <package-name>-devel ou -dev)
+
+Bash-3.2 (/bin/sh lien symbolique ou physique)
+Binutils-2.13.1
+Bison-2.7
+Coreutils-8.1
+Diffutils-2.8.1
+Findutils-4.2.31
+Gawk-4.0.1 (usr/bin/awk lien vers gawk)
+GCC-5.2
+Grep-2.5.1a
+Gzip-1.3.12
+Noyau Linux-4.19
+M4-1.4.10
+Make-4.0
+Patch-2.5.4
+Perl-5.8.8
+Python-3.4
+Sed-4.1.5
+Goudron-1,22
+Texinfo-5.0
+Xz-5.0.0
+
+LFS -> construit en une seul session
+chap 1 a 4 -> exec sur system hote, lors du redemarrage -> les procedures root apres section 2.4 doivent avoir la var LFS set pour ROOT user
+chap 5 a 6 -> /mnt/lfs partition montee
+-> fait en tant que user lfs -> su -lfs cmd doit etre exec avant d'exec n'importe qu'elle tache sur ce chap sinon risque d'installer paquet sur hote 
 
 
+1 - Preparation du systeme hote 
+| Creation d'une nouvelle partition |
+soit partition vide disponible soit creer une si on dispose de suffisamment d'espace non partitionnee
+min 10 Go - 30 Go taille recommandee 
+memoire vive RAM disponible pour les processus de compilation -> use swap partition  
+programme de partition de disk <cfdisk> ou <fdisk> 
 
+    La partition racine LFS -
+(ne pas confondre avec /root repertoire) 20 Go 
 
+    La partition Swap -
+2 Go - si use fct mise en veille prolongee de LINUX la partition swap doit etre au moins aussi grande que la RAM installe sur le system 
 
+    La partition Bios de Grub -
+if disk de demarrage a ete partitionne avec une table de partition GUID, partition de 1 Mo doit etre cree pas formatee -> 
+pour installation des chargeur de demarrage. name = "BIOS Boot" pour fdisk ou code EF02 pour gdisk
 
+    Cloisons de commodite - 
+    - /boot - tres recommandee
+partition pour stocker les noyaux et autres infos de demarrage. 1er partition physique de votre 1er lecteur de disk.
+200 Mo
+    - /boot/efi
+partition system EFI necessaire pour demarrer system avec UEFI pour BLFS
+    - /home - tres recommandee
+partager votre repertoire personnel et vos personnalisations user sur +sieurs distri ou builds LFS - taille importante depende de l'espace disk disponible
+    - /usr - possible pas necessaire
+/bon, /lib, /sbin sont des liens symbolique vers leurs homologue dans /usr 
+/usr contient tous les binaires necessaires au fonctionnement du system 
+    - /opt - util pour BLFS - 5 a 10 Go
+    - /tmp 
+partition tmpfs pour accelerer acces au fichiers temporaires 
+    - /usr/src 
+partition util pour stocker les fichiers src BLFS et les partager entre les builds LFS 30 a 50 Go
 
+| Creation d'un file system sur une partition |
 
+Partitions serie de secteurs sur un disque dur, delimite par une table de partition.
+Avant utilisation, la partition doit etre formatee pour contenir un systeme de fichiers.
+LFS peut utiliser n'importe qu'elle system de fichier reconnu par le noyaux Linux. Mais types les plus courants sont :
+ext3 et ext4. Choix depend des caracteristiques des fichiers et de la tailles des partitions.
+D'autres system existe comme FAT32 / NTFS / JFS / XFS.
 
+| Set var $LFS |
+definie sur le nom du repertoire dans lequel vous allez construire votre system LFS.
+EX : export LFS=/mnt/lfs
+/!\ VERIFIER regulierement que la LFS variable est bien definie sur le repertoire avec ->
+echo $LFS
 
+| Montage de la nouvelle partition |
+system de fichier cree, partition doit etre montee pour que le system hote puisse y acceder.
+en realite on monte le system de fichier integrer dans la partition
+mkdir -pv $LFS
+mount -v -t ext4 /dev/<name_partition_lfs> $LFS
+if plusieurs partition /home et LFS
+mkdir -pv $LFS
+mount -v -t ext4 /dev/<xxx> $LFS
+mkdir -v $LFS/home
+mount -v -t ext4 /dev/<yyy> $LFS/home
 
+verifier que les partitions sont pas montees avec des restrictions trop importante (nosuid et nodev)
+mount pour verfier restrictions, si pb remonter la partition.
 
+2 - Package et Patch
+Necessaires pour construire un system Linux de base.
+$LFS/sources peut-etre utilisee comme emplacement de stockage des archives tar et des correctifs et comme repertoire de travail.
+avant de demarrer session de telechargement et en tant que user root ->
+mkdir -v $LFS/sources
+-> ce repertoire doit etre accessible en ecriture et "Permanent"=signifie que meme si 
++sieurs user ont l'autorisation d'ecriture sur un repertoire seul le proprio peut suppr le fichier ans un repertoire permanent.
+chmod -v a+wt $LFS/sources
 
+Il y a +sieurs facon d'obtenir ces packages et correctifs pour creer LFS :
+* telecharger individuellement
+* archive tar de tous les fichiers necessaires peut etre telecharger sur les sites miroirs de LFS
+* fichier peuvent etre telecharger avec wget ->
+-> `wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources`
+md5sums = fichier utiliser pour verifier packge correct avant de continuer
 
+si fichier telecharger en tant que user non root, ces fichiers seront la propriete de l'utilisateur.
+les fichiers resteront la propriete d'un UID sans nom, cmd ->
+`chown root:root $LFS/sources/*`
 
+/!\ ALL PACKAGE LINK /!\
+https://www.linuxfromscratch.org/lfs/view/stable/chapter03/packages.html
+517 Mo 
+Correctif :
+https://www.linuxfromscratch.org/lfs/view/stable/chapter03/patches.html
+
+3 - Derniere prepa
+creer un ensemble de repertoire $LFS(installation d'outils temporaire),
+ajouter un user non privilegier et creer un env de construction approprie pour cet user
+unite de temps <SBU> utile pour mesurer le tps de construction des paquets LFS.
+
+* Creation d'une hierarchie de repertoire limitee pour futur program 
+root => 
+mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
+
+for i in bin lib sbin; do
+  ln -sv usr/$i $LFS/$i
+done
+
+case $(uname -m) in
+  x86_64) mkdir -pv $LFS/lib64 ;;
+esac
 
