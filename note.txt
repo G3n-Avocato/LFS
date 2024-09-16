@@ -193,7 +193,7 @@ chap 5 a 6 -> /mnt/lfs partition montee
 -> fait en tant que user lfs -> su -lfs cmd doit etre exec avant d'exec n'importe qu'elle tache sur ce chap sinon risque d'installer paquet sur hote 
 
 
-1 - Preparation du systeme hote 
+I - Preparation du systeme hote 
 | Creation d'une nouvelle partition |
 soit partition vide disponible soit creer une si on dispose de suffisamment d'espace non partitionnee
 min 10 Go - 30 Go taille recommandee 
@@ -237,20 +237,20 @@ D'autres system existe comme FAT32 / NTFS / JFS / XFS.
 
 | Set var $LFS |
 definie sur le nom du repertoire dans lequel vous allez construire votre system LFS.
-EX : export LFS=/mnt/lfs
+EX : `export LFS=/mnt/lfs`
 /!\ VERIFIER regulierement que la LFS variable est bien definie sur le repertoire avec ->
-echo $LFS
+`echo $LFS`
 
 | Montage de la nouvelle partition |
 system de fichier cree, partition doit etre montee pour que le system hote puisse y acceder.
 en realite on monte le system de fichier integrer dans la partition
-mkdir -pv $LFS
-mount -v -t ext4 /dev/<name_partition_lfs> $LFS
+`mkdir -pv $LFS`
+`mount -v -t ext4 /dev/<name_partition_lfs> $LFS`
 if plusieurs partition /home et LFS
-mkdir -pv $LFS
-mount -v -t ext4 /dev/<xxx> $LFS
-mkdir -v $LFS/home
-mount -v -t ext4 /dev/<yyy> $LFS/home
+`mkdir -pv $LFS`
+`mount -v -t ext4 /dev/<xxx> $LFS`
+`mkdir -v $LFS/home`
+`mount -v -t ext4 /dev/<yyy> $LFS/home`
 
 verifier que les partitions sont pas montees avec des restrictions trop importante (nosuid et nodev)
 mount pour verfier restrictions, si pb remonter la partition.
@@ -259,16 +259,16 @@ mount pour verfier restrictions, si pb remonter la partition.
 Necessaires pour construire un system Linux de base.
 $LFS/sources peut-etre utilisee comme emplacement de stockage des archives tar et des correctifs et comme repertoire de travail.
 avant de demarrer session de telechargement et en tant que user root ->
-mkdir -v $LFS/sources
+`mkdir -v $LFS/sources`
 -> ce repertoire doit etre accessible en ecriture et "Permanent"=signifie que meme si 
 +sieurs user ont l'autorisation d'ecriture sur un repertoire seul le proprio peut suppr le fichier ans un repertoire permanent.
-chmod -v a+wt $LFS/sources
+`chmod -v a+wt $LFS/sources`
 
 Il y a +sieurs facon d'obtenir ces packages et correctifs pour creer LFS :
 * telecharger individuellement
 * archive tar de tous les fichiers necessaires peut etre telecharger sur les sites miroirs de LFS
 * fichier peuvent etre telecharger avec wget ->
--> `wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources`
+`wget --input-file=wget-list-sysv --continue --directory-prefix=$LFS/sources`
 md5sums = fichier utiliser pour verifier packge correct avant de continuer
 
 si fichier telecharger en tant que user non root, ces fichiers seront la propriete de l'utilisateur.
@@ -287,14 +287,94 @@ ajouter un user non privilegier et creer un env de construction approprie pour c
 unite de temps <SBU> utile pour mesurer le tps de construction des paquets LFS.
 
 * Creation d'une hierarchie de repertoire limitee pour futur program 
-root => 
-mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
 
-for i in bin lib sbin; do
-  ln -sv usr/$i $LFS/$i
-done
+root => `mkdir -pv $LFS/{etc,var} $LFS/usr/{bin,lib,sbin}
 
-case $(uname -m) in
-  x86_64) mkdir -pv $LFS/lib64 ;;
-esac
+        for i in bin lib sbin; do
+          ln -sv usr/$i $LFS/$i
+        done
+
+        case $(uname -m) in
+          x86_64) mkdir -pv $LFS/lib64 ;;
+        esac`
+
+Cross-compiler installed in a special directory, separee des autres programmes ->
+`mkdir -pv $LFS/tools`
+ce repertoire ne doit pas exister dans la creation de LFS -> "/usr/lib64"
+
+* Ajouter LFS User 
+paquer des 2 prochains chap telechargee en tant que user non privilegiee.
+creation user <lfs> membre du nouveau groupe <lfs>
+
+root => `groupadd lfs`
+        `useradd -s /bin/bash -g lfs -m -k /dev/null lfs`
+
+-s /bin/bash => bash shell par default pour user lfs
+-g lfs => option ajoute user lfs au groupe lfs 
+-m => creer repertoire perso pour lfs 
+-k /dev/null => empeche copie de fichier a partir d'un repertoire squelette
+ 
+ definir un mot de pass pour lfs =>
+ `passwd lfs`
+
+ donner un acces complet a lfs =>
+        `chown -v lfs $LFS/{usr{,/*},lib,var,etc,bin,sbin,tools}
+        case $(uname -m) in
+          x86_64) chown -v lfs $LFS/lib64 ;;
+        esac`
+
+`fg` en cas de probleme 
+sinon `su - lfs`
+
+* configuration environnement 
+
+creer un bon environnement de travail vide en remplacant le shell en cours d'exec.
+evite que des variables dangereuse du system hote s'infiltre dans l'installation.
+`cat > ~/.bash_profile << "EOF"
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+EOF`
+
+creer le fichier .bashrc => 
+` cat > ~/.bashrc << "EOF"
+set +h                  # desactive fct de hachage de bash # lui demande de rechercher les nouveaux PATH pour qu'il oublie les anciens # 
+umask 022               # def du mask de crea de fichier user # fichier et rep accessible en ecriture que par proprio mais lisible et exec par les autres #
+LFS=/mnt/lfs            # def sur le pts de montage #
+LC_ALL=POSIX            # controle la localisation de certain program # dans environnement de compilation croisee #
+LFS_TGT=$(uname -m)-lfs-linux-gnu       # def une description de machine compatible pour compilateur croisee #
+PATH=/usr/bin		# path var standard pour env #
+if [ ! -L /bin ]; then PATH=/bin:$PATH; fi	# if /bin not a symbolic link, add to PATH #
+PATH=$LFS/tools/bin:$PATH			# rapel au shell d'utiliser compilateur croisee au lieu de compilateur hote #
+CONFIG_SITE=$LFS/usr/share/config.site	# rappel pour eviter de charger des elements de configuration du system hote # 
+export LFS LC_ALL LFS_TGT PATH CONFIG_SITE	# pour qu'ils soient visibles dans tous les sous-shell #
+EOF `
+
+Option de ligne de commande make pour preciser au makefile combien de coeurs logique le system possede =>
+`make -j32`
+ou makefile var =? `export MAKEFLAGS=-j32`
+
+verif tout est en place => `source ~/.bash_profile`
+
+* Les SBU
+la mesure Standard Build Unit (SBU)
+Le temps nécessaire à la compilation en utilisant un seul cœur est ce que nous 
+appellerons l'unité de compilation standard ou SBU.
+
+II - Creation de la chaine d'outils croisee LFS et des outils temporaires 
+- etape 1 - construction compilateur croisee et ses bibliotheques associees;
+- etape 2 - utilisation de cette chaine d'outils croisee pour creer plusieurs utilitaires de maniere a les isoler de la distribution hote;
+- etape 3 - entree dans environnement chroot (ameliore isolation de l'hote) et construction d'outils necessaire au system final.
+
+Note techniques sur la chaine d'outils:
+But=> produire une zne temp contenant un ensemble d'outils reconnus comme efficace et isolee du system hote.
+compilation croisee presente un avantage => tout ce qui est compilee de maniere croisee ne peut pas dependre de l'env hote.
+
+The build, machine where we build programs or host.
+The host, machine/system where the build programs will run.
+The target, use for compilateur, il s'agit de la machine pour laquelle le compilateur produit le code.
+
+autoconf forme cpu-vendor-kernel-os 
+
+revenir a cette addr =>
+https://www.linuxfromscratch.org/lfs/view/stable/partintro/toolchaintechnotes.html
+
 
