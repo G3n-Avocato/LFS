@@ -1,0 +1,24 @@
+
+GNU
+
+make all
+make install 
+make uninstall
+make clean 
+
+make distclean => efface ce que ./configure a cree 
+make check => exec suite de test 
+make installcheck => verifie les programme ou lib installes, si pris en charge 
+make dist => recreer une ersion .tar.gz de tous les fichiers sources 
+
+Flags : 
+CC 
+CFLAGS 
+CXX 
+CXXFLAGS
+LDFLAGS => flag link 
+
+La compilation croisee consiste a construire sur une plateforme un binaire qui
+s'executera sur une autre platforme. 
+plateforme de construction 
+plateforme hote 

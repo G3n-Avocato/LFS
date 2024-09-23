@@ -377,4 +377,5 @@ autoconf forme cpu-vendor-kernel-os
 revenir a cette addr =>
 https://www.linuxfromscratch.org/lfs/view/stable/partintro/toolchaintechnotes.html
 
+1 - Compilation d'une chaine d'outils croisee 
 
