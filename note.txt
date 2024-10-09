@@ -96,49 +96,70 @@ system de fichier virtuel contennat des infos sur le noyaux et les proscessus
 
 /sys
 
-/usr 
+/usr hierarchie :
 donnes partageables en lecture seule.
-hierarchie :
+
 /usr/bin -> les cmds user 
 aucun sous repertoire. 
+
 /usr/include -> repertoire pour fichiers d'include standard
 pour langage programmation C.
+
 /usr/lib -> lib 
 inclu fichier object et bibliotheques
+
 /usr/libexec (faculattif) -> binaires exec par d'autre program.
+
 /usr/local -> hierarchie locale 
 use by admin system pour installation locale de logiciels.
+
 /usr/sbin -> binaire system non vitaux
 aucun sous repertoire dans /usr/sbin.
+
 /usr/share -> donnees independantes de l'architecture.
 tout program ou package qui contient ou requiert des donnees qui 
 n'ont pas besoin d'etre modifiees doit stocker ces donnees dans 
 /usr/share avec un sous repertoire.
+
 /usr/share/man -> manuels en ligne.
+
 /usr/share/misc -> donnees diverses independantes de l'architecture
 -> ascii
+
 /usr/src -> code source uniquement a des fins de reference
 
-/var
+/var hierarchie :
 contient fichiers de donnees variables. inclut spool. donnees admin et 
 journalistaion (log), fichiers transitoire et temporaires.
+/var/account -> 
+
 /var/cache -> donnees du cache d'application.
 les donnees doivent rester valides entre les appels de l'app et le redemarrage du system.
 l'app doit etre capable de recuperer apres la suppression manuelle de ces fichiers.
 
 /var/lib -> information sur l'etat variables
+
 /var/lib/misc -> donnees diverse sur l'etat
+
 /var/local -> donnees variables pour /usr/local
+
 /var/lock -> verouiller les fichiers 
 fichiers de verouillage pour peripheriques.
+
 /var/log -> fichiers journaux et repertoires
+
 /var/log/lastlog, /messages, /wtmp
+
 /var/opt -> donnees variable pour /opt
+
 /var/run -> donnees pertinentes pour les proscessus en cours d'execution.
 lien symbolique vers /run
+
 /var/spool -> donnees de la bobine d'appl,
 donnees qui attendent un traitement ulterieur. suppr apres avoir ete traitee.
+
 /var/spool/cron -> tache cron et at 
+
 /var/tmp -> fichier temporaires conserves entre les redemarrages du systeme
 
 https://www.gnu.org/software/automake/manual/html_node/index.html#SEC_Contents

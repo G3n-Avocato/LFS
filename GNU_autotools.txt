@@ -22,3 +22,11 @@ La compilation croisee consiste a construire sur une plateforme un binaire qui
 s'executera sur une autre platforme. 
 plateforme de construction 
 plateforme hote 
+
+
+[Partitions]
+gdisk 
+lsblk
+cfdisk 
+partition pour VM ajouter un hardisk virtuel =>
+https://openclassrooms.com/fr/courses/2356316-montez-un-serveur-de-fichiers-sous-linux/5173601-maitrisez-le-partitionnement-et-le-montage
