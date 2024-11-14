@@ -31,15 +31,15 @@ Linux From Scratch (LFS) Version 12.2
 
 4- Entrer dans le chroot environment
 
-`chroot "$LFS" /usr/bin/env -i   \`
-`    HOME=/root                  \`
-`    TERM="$TERM"                \`
-`    PS1='(lfs chroot) \u:\w\$ ' \`
-`    PATH=/usr/bin:/usr/sbin     \`
-`    MAKEFLAGS="-j$(nproc)"      \`
-`    TESTSUITEFLAGS="-j$(nproc)" \`
-`    /bin/bash --login`
-
+`chroot "$LFS" /usr/bin/env -i   \`  
+`    HOME=/root                  \`  
+`    TERM="$TERM"                \`  
+`    PS1='(lfs chroot) \u:\w\$ ' \`  
+`    PATH=/usr/bin:/usr/sbin     \`  
+`    MAKEFLAGS="-j$(nproc)"      \`  
+`    TESTSUITEFLAGS="-j$(nproc)" \`  
+`    /bin/bash --login`  
+  
 * Sortir de l'env chroot  
 * Demonter le system de partitions  
 
