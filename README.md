@@ -8,64 +8,64 @@ Linux From Scratch (LFS) Version 12.2
 
 1- Monter les partitions Linux Filesystem (/) et (/boot):  
 
-<mount -v -t ext4 /dev/sdb4 $LFS>  
-<mount -v -t ext4 /dev/sdb2 $LFS/boot>
+`mount -v -t ext4 /dev/sdb4 $LFS`  
+`mount -v -t ext4 /dev/sdb2 $LFS/boot`
 
 2- Verifier partition swap active:  
 
-</sbin/swapon -v /dev/sdb3>  
+`/sbin/swapon -v /dev/sdb3`  
 
 3- Montage de (/dev) et du Virtual Kernel File Systems
 
-<mount -v --bind /dev $LFS/dev>
-<mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+`mount -v --bind /dev $LFS/dev`
+`mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
 mount -vt proc proc $LFS/proc
 mount -vt sysfs sysfs $LFS/sys
-mount -vt tmpfs tmpfs $LFS/run>
+mount -vt tmpfs tmpfs $LFS/run`
 
-<if [ -h $LFS/dev/shm ]; then
+`if [ -h $LFS/dev/shm ]; then
   install -v -d -m 1777 $LFS$(realpath /dev/shm)
 else
   mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
-fi>
+fi`
 
 4- Entrer dans le chroot environment
 
-<chroot "$LFS" /usr/bin/env -i   \
+`chroot "$LFS" /usr/bin/env -i   \
     HOME=/root                  \
     TERM="$TERM"                \
     PS1='(lfs chroot) \u:\w\$ ' \
     PATH=/usr/bin:/usr/sbin     \
     MAKEFLAGS="-j$(nproc)"      \
     TESTSUITEFLAGS="-j$(nproc)" \
-    /bin/bash --login>
+    /bin/bash --login`
 
 * Sortir de l'env chroot  
 * Demonter le system de partitions  
 
 1- Sortie de l'env  
 
-<logout>  
+`logout`  
 
 Sortir du directory "/mnt/lfs"  
 
 2- Demonter le system de fichier virtuel  
 
-<umount -v $LFS/dev/pts  
+`umount -v $LFS/dev/pts  
 mountpoint -q $LFS/dev/shm && umount -v $LFS/dev/shm  
 umount -v $LFS/dev  
 umount -v $LFS/run  
 umount -v $LFS/proc  
-umount -v $LFS/sys>  
+umount -v $LFS/sys`  
 
 3- Demonter le LFS filesystem et les autres partitions utilisee
 
-<umount -v $LFS/boot  
-umount -v $LFS>  
+`umount -v $LFS/boot  
+umount -v $LFS`  
 
 * Commandes liee a la gestion du filesystem virtuel  
 
-<findmnt | grep /mnt/lfs>  
+`findmnt | grep /mnt/lfs`  
 
 ## Structure partitions  
 
@@ -81,9 +81,9 @@ umount -v $LFS>
 
 * Commandes liee a la gestion des partitions  
 
-<lsblk> = affiche tous les peripheriques (disques et partitions)
-<fdisk -l> =  list partitions
-<mkfs -t ext4 /dev/sdb4> = creer un system de fichiers linux (-t precise le type ext2 ext3 ext4)  
+`lsblk` = affiche tous les peripheriques (disques et partitions)
+`fdisk -l` =  list partitions
+`mkfs -t ext4 /dev/sdb4` = creer un system de fichiers linux (-t precise le type ext2 ext3 ext4)  
 
 ## Configuration du System  
 
@@ -91,45 +91,45 @@ umount -v $LFS>
 
 * * /etc/sysconfig/ifconfig.eth0 >>  
 
-<IFACE=enp0s3  
+`IFACE=enp0s3  
 IP=10.0.2.15  
 GATEWAY=10.0.2.2  
-BROADCAST=10.0.2.255>  
+BROADCAST=10.0.2.255`  
 
 * * DNS address >> /etc/resolv.conf >>
 
-<domain lfs.com 
-nameserver 8.8.8.8
-nameserver 8.8.4.4>  
+`domain lfs.com    
+nameserver 8.8.8.8  
+nameserver 8.8.4.4`  
 (8.8.8.8 et 4.4 are Google Public IPv4 Domain Name Service address)  
 
 * * Nom hote du system >> /etc/hostname 
 
-<echo "name_hostsystem" > /etc/hostanme>
+`echo "name_hostsystem" > /etc/hostanme`
 
 * * Fichier nom de domaine (FQDN) >> /etc/hosts  
 
-<127.0.0.1 localhost.localdomain localhost  
+`127.0.0.1 localhost.localdomain localhost  
 127.0.1.1 name_hostsystem.lfs.com name_hostsystem  
-<10.0.2.15> name_hostsystem.lfs.com name_hostsystem>  
+<10.0.2.15> name_hostsystem.lfs.com name_hostsystem` 
 
 * System file Configuration (option du noyau Linux et GRUB) 
 
 /etc/fstab = table de systeme de fichiers, ou ils doivent etre montes et dans quel ordre.  
-ensuite configurer les options du noyau linux avec l'interface du menuconfig. vers vmlinuz  
+Suite configurer les options du noyau linux avec l'interface du menuconfig. Vers vmlinuz.  
 
 * * config GRUB 
 
 Installer GRUB en mode BIOS sur ton disque sdb:  
   
-<grub-install --target=i386-pc /dev/sdb>  
+`grub-install --target=i386-pc /dev/sdb`  
 
 file >> /boot/grub/grub.cfg >>  
 
-<set root=(hd1,2)  
+`set root=(hd1,2)  
 memuentry "GNU/Linux, Linux 6.10.5-name_version" {  
     linux   /vmlinuz-6.10.5-name_version root=/dev/sdb4 ro  
-}>  
+}`  
 
 * Notes config  
 
@@ -165,29 +165,29 @@ Noyau LINUX compilee et compressee, pret a etre chargee par le chargeur d'amorca
   
 * Commandes systems  
   
-<locale -a> = liste tous les parametres regionaux pris en charge par glibc  
-<ip -a> = list les interfaces reseau  
-<ip route> = check passerelle par default  
+`locale -a` = liste tous les parametres regionaux pris en charge par glibc  
+`ip -a` = list les interfaces reseau  
+`ip route` = check passerelle par default  
 
 ## System LFS lancee et fonctionnel  
 
 * Commandes creations user no-root  
 
 En tant que root user:  
-<groupadd name_group>  
-<useradd -s /bin/bash -g name_user -m>  
-<passwd name_user>  
+`groupadd name_group`  
+`useradd -s /bin/bash -g name_user -m`    
+`passwd name_user`    
 
 * root to user / user to root  
 
-<su - name_user>
-<su -  
-passwd: >  
+`su - name_user`  
+`su -  
+passwd:`  
 
 * eteindre le system correctement  
 
-<poweroff>  
+`poweroff`  
 
 * test network  
 
-<ping -c 8.8.8.8>
+`ping -c 8.8.8.8`
