@@ -17,28 +17,28 @@ Linux From Scratch (LFS) Version 12.2
 
 3- Montage de (/dev) et du Virtual Kernel File Systems
 
-`mount -v --bind /dev $LFS/dev`
-`mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
-mount -vt proc proc $LFS/proc
-mount -vt sysfs sysfs $LFS/sys
-mount -vt tmpfs tmpfs $LFS/run`
+`mount -v --bind /dev $LFS/dev`  
+`mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts`  
+`mount -vt proc proc $LFS/proc`  
+`mount -vt sysfs sysfs $LFS/sys`  
+`mount -vt tmpfs tmpfs $LFS/run`  
 
-`if [ -h $LFS/dev/shm ]; then
-  install -v -d -m 1777 $LFS$(realpath /dev/shm)
-else
-  mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
-fi`
+`if [ -h $LFS/dev/shm ]; then`  
+`  install -v -d -m 1777 $LFS$(realpath /dev/shm)`  
+`else`  
+`  mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm`  
+`fi`  
 
 4- Entrer dans le chroot environment
 
-`chroot "$LFS" /usr/bin/env -i   \
-    HOME=/root                  \
-    TERM="$TERM"                \
-    PS1='(lfs chroot) \u:\w\$ ' \
-    PATH=/usr/bin:/usr/sbin     \
-    MAKEFLAGS="-j$(nproc)"      \
-    TESTSUITEFLAGS="-j$(nproc)" \
-    /bin/bash --login`
+`chroot "$LFS" /usr/bin/env -i   \`
+`    HOME=/root                  \`
+`    TERM="$TERM"                \`
+`    PS1='(lfs chroot) \u:\w\$ ' \`
+`    PATH=/usr/bin:/usr/sbin     \`
+`    MAKEFLAGS="-j$(nproc)"      \`
+`    TESTSUITEFLAGS="-j$(nproc)" \`
+`    /bin/bash --login`
 
 * Sortir de l'env chroot  
 * Demonter le system de partitions  
@@ -51,17 +51,17 @@ Sortir du directory "/mnt/lfs"
 
 2- Demonter le system de fichier virtuel  
 
-`umount -v $LFS/dev/pts  
-mountpoint -q $LFS/dev/shm && umount -v $LFS/dev/shm  
-umount -v $LFS/dev  
-umount -v $LFS/run  
-umount -v $LFS/proc  
-umount -v $LFS/sys`  
+`umount -v $LFS/dev/pts`  
+`mountpoint -q $LFS/dev/shm && umount -v $LFS/dev/shm`  
+`umount -v $LFS/dev`  
+`umount -v $LFS/run`  
+`umount -v $LFS/proc`  
+`umount -v $LFS/sys`  
 
 3- Demonter le LFS filesystem et les autres partitions utilisee
 
-`umount -v $LFS/boot  
-umount -v $LFS`  
+`umount -v $LFS/boot`  
+`umount -v $LFS`  
 
 * Commandes liee a la gestion du filesystem virtuel  
 
@@ -91,16 +91,16 @@ umount -v $LFS`
 
 * * /etc/sysconfig/ifconfig.eth0 >>  
 
-`IFACE=enp0s3  
-IP=10.0.2.15  
-GATEWAY=10.0.2.2  
-BROADCAST=10.0.2.255`  
+`IFACE=enp0s3`  
+`IP=10.0.2.15`  
+`GATEWAY=10.0.2.2`  
+`BROADCAST=10.0.2.255`  
 
 * * DNS address >> /etc/resolv.conf >>
 
-`domain lfs.com    
-nameserver 8.8.8.8  
-nameserver 8.8.4.4`  
+`domain lfs.com`  
+`nameserver 8.8.8.8`  
+`nameserver 8.8.4.4`  
 (8.8.8.8 et 4.4 are Google Public IPv4 Domain Name Service address)  
 
 * * Nom hote du system >> /etc/hostname 
@@ -109,9 +109,9 @@ nameserver 8.8.4.4`
 
 * * Fichier nom de domaine (FQDN) >> /etc/hosts  
 
-`127.0.0.1 localhost.localdomain localhost  
-127.0.1.1 name_hostsystem.lfs.com name_hostsystem  
-<10.0.2.15> name_hostsystem.lfs.com name_hostsystem` 
+`127.0.0.1 localhost.localdomain localhost`
+`127.0.1.1 name_hostsystem.lfs.com name_hostsystem`  
+`<10.0.2.15> name_hostsystem.lfs.com name_hostsystem` 
 
 * System file Configuration (option du noyau Linux et GRUB) 
 
@@ -126,10 +126,10 @@ Installer GRUB en mode BIOS sur ton disque sdb:
 
 file >> /boot/grub/grub.cfg >>  
 
-`set root=(hd1,2)  
-memuentry "GNU/Linux, Linux 6.10.5-name_version" {  
-    linux   /vmlinuz-6.10.5-name_version root=/dev/sdb4 ro  
-}`  
+`set root=(hd1,2)`  
+`memuentry "GNU/Linux, Linux 6.10.5-name_version" {`    
+`    linux   /vmlinuz-6.10.5-name_version root=/dev/sdb4 ro`    
+`}`  
 
 * Notes config  
 
@@ -181,8 +181,7 @@ En tant que root user:
 * root to user / user to root  
 
 `su - name_user`  
-`su -  
-passwd:`  
+`su - `    
 
 * eteindre le system correctement  
 
