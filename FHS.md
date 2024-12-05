@@ -1,11 +1,12 @@
-Filesystem Hierarchy Standard
 
-/bin
+#Filesystem Hierarchy Standard
+[FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s04.html)  
+  
+##/bin
 commande qui peuvent a la fois etre utiliser par admin
 et par user. Mais necessaires lorsque aucun system de fichier
-n'est montee. Contient aussi des cmds utilisees involontairement des scripts.
+n'est montee.  
 
-aucun sous repertoire dans /bin.
 les cmds 3.4 sont obligatoires 
 /boot
 tout ce qui est necessaire au proscessus de demarrage

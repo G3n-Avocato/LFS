@@ -169,6 +169,12 @@ Noyau LINUX compilee et compressee, pret a etre chargee par le chargeur d'amorca
 `ip -a` = list les interfaces reseau  
 `ip route` = check passerelle par default  
 
+* Commandes debug  
+
+`./configure > output.txt 2>&1` = redirige stdout et stderr de ./configure dans un file   
+`./configure > stdout.txt 2> stderr.txt` = redirige les 2 sorties separemment  
+`./configure 2>&1 | tee output.txt` = redirige les sorties et les prints dans le terminal  
+  
 ## System LFS lancee et fonctionnel  
 
 * Commandes creations user no-root  
