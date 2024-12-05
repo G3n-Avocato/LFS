@@ -198,8 +198,7 @@ partition to store kernels and other boot info. 1st physical partition of your 1
     - /boot/efi  -
 EFI system partition needed to boot system with UEFI for BLFS.  
     - /home - very recommended  
-    - /usr -  
-/bin, /lib, /sbin sont des liens symbolique vers leurs homologue dans /usr  
+    - /usr - /bin, /lib, /sbin are symbolic link to their counterpart /usr  
     - /opt - useful for BLFS - (5-10 Go)  
     - /tmp -  
     - /usr/src (30 - 50 Go)  
