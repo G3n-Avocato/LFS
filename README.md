@@ -1,4 +1,4 @@
-# ft_linux
+# LFS
 Linux From Scratch (LFS) Version 12.2  
 
 ## Entrer / Sortir de l'env chroot sur host
@@ -11,7 +11,7 @@ Linux From Scratch (LFS) Version 12.2
 `mount -v -t ext4 /dev/sdb4 $LFS`  
 `mount -v -t ext4 /dev/sdb2 $LFS/boot`
 
-2- Verifier partition swap active:  
+2- Vérifier partition swap active:  
 
 `/sbin/swapon -v /dev/sdb3`  
 
@@ -41,7 +41,7 @@ Linux From Scratch (LFS) Version 12.2
 `    /bin/bash --login`  
   
 * Sortir de l'env chroot  
-* Demonter le system de partitions  
+* Démonter le system de partitions  
 
 1- Sortie de l'env  
 
@@ -49,7 +49,7 @@ Linux From Scratch (LFS) Version 12.2
 
 Sortir du directory "/mnt/lfs"  
 
-2- Demonter le system de fichier virtuel  
+2- Démonter le system de fichier virtuel  
 
 `umount -v $LFS/dev/pts`  
 `mountpoint -q $LFS/dev/shm && umount -v $LFS/dev/shm`  
@@ -58,32 +58,32 @@ Sortir du directory "/mnt/lfs"
 `umount -v $LFS/proc`  
 `umount -v $LFS/sys`  
 
-3- Demonter le LFS filesystem et les autres partitions utilisee
+3- Démonter LFS filesystem et les autres partitions utilisées
 
 `umount -v $LFS/boot`  
 `umount -v $LFS`  
 
-* Commandes liee a la gestion du filesystem virtuel  
+* cmd display virtual filesystem mount  
 
-`findmnt | grep /mnt/lfs`  
+`(findmnt | grep /mnt/lfs)`  
 
 ## Structure partitions  
 
-1- /dev/sdb1 (BIOS/GRUB) BIOS BOOT (code binaire de GRUB, demarrage du system, image initial de grub chargee dans le bios) 
+1- /dev/sdb1 (BIOS/GRUB) BIOS BOOT (code binaire de GRUB, démarrage du system, image initial de grub chargée dans le bios) 
 1Mo  
 
-2- /dev/sdb2 (/boot) LINUX FILESYSTEM (noyaux, autres fichiers necessaires au demarage du system) 200Mo  
+2- /dev/sdb2 (/boot) LINUX FILESYSTEM (noyaux, autres fichiers nécessaires au démarrage du system) 200Mo  
 
-3- /dev/sdb3 (swap) LINUX SWAP (swap space, decharge la RAM (memoire vive physique = utiliser pour stocker des donnees en cours de traitement) le system va deplacer des pages memoires vers swap afin de liberer de l'espace memoire) 
+3- /dev/sdb3 (swap) LINUX SWAP (swap space, decharge la RAM (mémoire vive physique = utilisée pour stocker des données en cours de traitement) le system va deplacer des pages mémoires vers swap afin de libérer de l'espace mémoire) 
 8Go  
 
 4- /dev/sdb4 (/)(racine) LINUX FILESYSTEM min 30Go  
 
-* Commandes liee a la gestion des partitions  
+* Commandes liée a la gestion des partitions  
 
-`lsblk` = affiche tous les peripheriques (disques et partitions)
+`lsblk` = affiche tous les périphériques (disques et partitions)
 `fdisk -l` =  list partitions
-`mkfs -t ext4 /dev/sdb4` = creer un system de fichiers linux (-t precise le type ext2 ext3 ext4)  
+`mkfs -t ext4 /dev/sdb4` = créer un system de fichiers linux (-t précise le type ext2-ext3-ext4)  
 
 ## Configuration du System  
 
@@ -115,7 +115,7 @@ Sortir du directory "/mnt/lfs"
 
 * System file Configuration (option du noyau Linux et GRUB) 
 
-/etc/fstab = table de systeme de fichiers, ou ils doivent etre montes et dans quel ordre.  
+/etc/fstab = table de systeme de fichiers, où ils doivent étre montés et dans quel ordre.  
 Suite configurer les options du noyau linux avec l'interface du menuconfig. Vers vmlinuz.  
 
 * * config GRUB 
@@ -135,49 +135,49 @@ file >> /boot/grub/grub.cfg >>
 
 * * Udev 
   
-Gestion dynamique des peripheriques dans le systeme. C'est une partie de systemd mais il peut etre installee independamment.  
-Gestion des peripheriques materiels en creant dynamiquement des fichiers de peripheriques dans le repertoire /dev.  
-Remplace la creation statique de peripheriques par une gestion dynamique. (creer uniquement les peripheriques detectee et pas tous les peripheriques pouvant exister)   
-Simplifie la config des periphs via des regles de nommages et de permissions. (donne des noms plus significatifs qux peripheriques)(on peut aussi definir des permissions d'acces pour chaque peripherique aux users ou groups)   
-Permet des action automatisees lors de changements de materiels. (peripherique connecte ou deconnectee(usb peut monter un volume/peripherique reseau declenche config reseau))    
+Gestion dynamique des périphériques dans le system. C'est une partie de systemd mais il peut étre installé independamment.  
+Gestion des périphériques matériels en créant dynamiquement des fichiers de périphériques dans le répertoire /dev.  
+Remplace la création statique de périphériques par une gestion dynamique. (créer uniquement les périphériques détectés et pas tous les périphériques pouvant exister)   
+Simplifie la config des périphs via des régles de nommages et de permissions. (donne des noms plus significatifs aux peripheriques)(on peut aussi definir des permissions d'accées pour chaque périphérique aux users ou groups)   
+Permet des actions automatisées lors de changements de matériels. (périphérique connecté ou deconnecté(usb peut monter un volume/périphérique réseau déclenche config réseau))    
   
 * * GRUB  
   
-(Grand Unified Bootloader) est un chargeur d'amorcage. Responsable du processus initial de demarrage d'un systeme.  
-Ordi allumer => passe par sequence d'init du materiel (BIOS) qui recherche ensuite le chargeur d'amorcage (GRUB) pour lancer system d'exploitation.  
-GRUB localise et charge le noyaux LINUX dans la RAM. Puis passe la main au noyau en lui fournissant parametre necessaire.  
-GRUB permet le multi-boot peut gerer plusieurs system d'exploitation sur le meme disque dur.  
-Flexible pour tester des configurations variees du noyau.  
-Interface de recuperation en cas de probleme.  
+(Grand Unified Bootloader) est un chargeur d'amorcage. Responsable du processus initial de démarrage d'un system.  
+Ordi allumé => passe par séquence d'init du matériel (BIOS) qui recherche ensuite le chargeur d'amorcage (GRUB) pour lancer system d'exploitation.  
+GRUB localise et charge le noyaux LINUX dans la RAM. Puis passe la main au noyau en lui fournissant les paramètres necessaire.  
+GRUB permet le multi-boot, peut gérer plusieurs system d'exploitation sur le même disque dur.  
+Flexible pour tester des configurations variées du noyau.  
+Interface de récuperation en cas de problème.  
   
-* * Script de demarrage  
+* * Script de démarrage  
   
 SysVinit = gestionnaire de service UNIX/LINUX ou daemon manager (initialiser et gerer les services)  
-Modele d'initialisation basee sur des scripts et des niveaux d'executions, scripts de demarrage et execution sequentielle (ordre specifique d'execution).  
-Simple et Leger mais manques de parallelisme et dependances limitees.  
+Modèle d'initialisation basé sur des scripts et des niveaux d'executions, scripts de démarrage et execution sequentielle (ordre specifique d'execution).  
+Simple et Leger mais manques de parallelisme et dependances limitées.  
   
-SystemD = plus moderne, approche plus modulaire et orientee vers les dependances pour gerer les services.  
-Demarrage parallele. composants system definis par des unites permet un ciblage pour remplacer les niveaux d'exec de sysvinit.  
-plus complexe et emprunte memoire plus elevee.  
+SystemD = plus moderne, approche plus modulaire et orientée vers les dépendances pour gérer les services.  
+Démarrage parallele. composants system definis par des unités permet un ciblage pour remplacer les niveaux d'exec de sysvinit.  
+plus complexe et emprunte mémoire plus elevée.  
   
 * * vmlinuz 
-Noyau LINUX compilee et compressee, pret a etre chargee par le chargeur d'amorcage (GRUB) pour init le systeme. Contient code du noyau en format executable.  
+Noyau LINUX compilée et compressée, pret a étre chargée par le chargeur d'amorcage (GRUB) pour init le systeme. Contient code du noyau en format executable.  
   
 * Commandes systems  
   
-`locale -a` = liste tous les parametres regionaux pris en charge par glibc  
-`ip -a` = list les interfaces reseau  
+`locale -a` = liste tous les paramètres regionaux pris en charge par glibc  
+`ip -a` = liste les interfaces reseaux  
 `ip route` = check passerelle par default  
 
 * Commandes debug  
 
 `./configure > output.txt 2>&1` = redirige stdout et stderr de ./configure dans un file   
-`./configure > stdout.txt 2> stderr.txt` = redirige les 2 sorties separemment  
+`./configure > stdout.txt 2> stderr.txt` = redirige les 2 sorties séparemment  
 `./configure 2>&1 | tee output.txt` = redirige les sorties et les prints dans le terminal  
   
-## System LFS lancee et fonctionnel  
+## System LFS up et fonctionnel  
 
-* Commandes creations user no-root  
+* Commandes créations user no-root  
 
 En tant que root user:  
 `groupadd name_group`  
@@ -189,7 +189,7 @@ En tant que root user:
 `su - name_user`  
 `su - `    
 
-* eteindre le system correctement  
+* éteindre le system correctement  
 
 `poweroff`  
 
