@@ -1,0 +1,8 @@
+# cat /etc/sysconfig/ifconfig.eth0
+ONBOOT=yes
+IFACE=enp0s3
+SERVICE=ipv4-static
+IP=10.0.2.15
+GATEWAY=10.0.2.2
+PREFIX=24
+BROADCAST=10.0.2.255

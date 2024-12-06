@@ -1,0 +1,6 @@
+# cat /etc/hosts
+127.0.0.1 localhost.localdomain localhost
+127.0.1.1 login.lfs.com login
+<10.0.2.15> login.lfs.com login
+::1       localhost ip6-localhost ip6-loopback
+# end /etc/hosts
