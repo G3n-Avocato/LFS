@@ -176,6 +176,8 @@ Texinfo-5.0
 Xz-5.0.0  
   
 I - Preparing the host system  
+[Partition and Mount Lessons](https://openclassrooms.com/fr/courses/2356316-montez-un-serveur-de-fichiers-sous-linux/5173601-maitrisez-le-partitionnement-et-le-montage)  
+  
 | Creating a new partition |  
 either empty partition available or there is sufficient unpartitioned space.  
 min 10 Go - 30 Go recommended size  
@@ -244,3 +246,15 @@ The build, machine where we build programs or host.
 The host, machine/system where the build programs will run.  
 The target, use for compiler, this is the machine for which the compiler produces the code.  
   
+# GNU note  
+
+make all
+make install 
+make uninstall
+make clean 
+make -j4 
+
+make distclean => erase what ./configure created
+make check => execute test suite
+make installcheck => checks installed programs or libs, if supported
+make dist => recreate a .tar.gz version of all source files
